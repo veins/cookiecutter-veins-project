@@ -1,0 +1,8 @@
+{
+    "project_name": "Veins Proj",
+    "project_brief": "Sample combination of Veins and a custom project",
+    "project_name_as_file_name": "{{ cookiecutter.project_name | lower | replace(' ', '_') | replace('-', '_') | replace('.', '_') | urlencode | replace('%', '') }}",
+    "project_name_as_macro_name": "{{ cookiecutter.project_name | upper | replace(' ', '_') | replace('-', '_') | replace('.', '_') | urlencode | replace('%', '') }}",
+    "use_inet": ["no", "yes"],
+    "_dummy": ""
+}

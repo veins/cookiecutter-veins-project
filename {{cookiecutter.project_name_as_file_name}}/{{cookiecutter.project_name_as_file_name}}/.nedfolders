@@ -1,0 +1,2 @@
+src/{{ cookiecutter.project_name_as_file_name }}
+examples/{{ cookiecutter.project_name_as_file_name }}

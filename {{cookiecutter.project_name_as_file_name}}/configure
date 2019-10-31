@@ -1,0 +1,9 @@
+#!/bin/sh
+
+(cd veins && ./configure)
+{%- if cookiecutter.use_inet == "yes" %}
+(cd inet && make makefiles)
+(cd veins/subprojects/veins_inet && ./configure)
+{%- endif %}
+(cd {{ cookiecutter.project_name_as_file_name }} && ./configure)
+
