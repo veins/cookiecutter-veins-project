@@ -57,6 +57,11 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins_vlc', '--message
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe_veins', '--message', 'Merge Plexe Veins 3.0-alpha1', 'https://github.com/michele-segata/plexe-veins', 'plexe-3.0a1'])
 {%- endif %}
 
+# SimuLTE
+{%- if cookiecutter.use_simulte == "yes" %}
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message', 'Merge SimuLTE 1.1.0', 'https://github.com/inet-framework/simulte.git', 'v1.1.0'])
+{%- endif %}
+
 # Veins
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.0', 'https://github.com/sommer/veins', 'veins-5.0'])
 

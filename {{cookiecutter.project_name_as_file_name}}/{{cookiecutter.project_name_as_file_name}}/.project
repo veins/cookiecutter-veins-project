@@ -18,6 +18,9 @@
 {%- if cookiecutter.use_plexe_veins == "yes" %}
 		<project>plexe-veins</project>
 {%- endif %}
+{%- if cookiecutter.use_simulte == "yes" %}
+		<project>lte</project>
+{%- endif %}
 	</projects>
 	<buildSpec>
 		<buildCommand>

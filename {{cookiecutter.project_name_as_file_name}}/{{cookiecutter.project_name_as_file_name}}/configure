@@ -45,6 +45,9 @@ parser.add_option("--with-veins-vlc", dest="veins_vlc", help="link with a versio
 {%- if cookiecutter.use_plexe_veins == "yes" %}
 parser.add_option("--with-plexe-veins", dest="plexe_veins", help="link with a version of Plexe Veins installed in PATH", metavar="PATH", default="../plexe_veins")
 {%- endif %}
+{%- if cookiecutter.use_simulte == "yes" %}
+parser.add_option("--with-simulte", dest="simulte", help="link with a version of SimuLTE installed in PATH", metavar="PATH", default="../simulte")
+{%- endif %}
 {%- if cookiecutter.use_inet == "yes" %}
 parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH", metavar="PATH", default="../inet")
 parser.add_option("--with-veins-inet", dest="veins_inet", help="link with a version of Veins_INET installed in PATH", metavar="PATH", default="../veins/subprojects/veins_inet")
@@ -281,6 +284,38 @@ if options.plexe_veins:
     run_libs = [os.path.relpath(os.path.join(options.plexe_veins, 'src', 'plexe'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.plexe_veins, 'src', 'plexe'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.plexe_veins, 'images'))] + run_imgs
+{%- endif %}
+{%- if cookiecutter.use_simulte == "yes" %}
+
+
+# Add flags for SimuLTE
+if options.simulte:
+    fname = os.path.join(options.simulte, 'Version')
+    expect_version = ['v1.1.0']
+    try:
+        print 'Running "%s" to determine SimuLTE version.' % fname
+        version = subprocess.check_output(['env', 'cat', fname]).strip()
+        if not version in expect_version:
+            print ''
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            warning('Unsupported SimuLTE Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            print ''
+        else:
+            print 'Found SimuLTE version "%s". Okay.' % version
+    except subprocess.CalledProcessError as e:
+        error('Could not determine SimuLTE Version (by running %s): %s. Check the path to SimuLTE (--with-simulte=... option) and the SimuLTE version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        sys.exit(1)
+
+    simulte_header_dirs = [os.path.join(os.path.relpath(options.simulte, 'src'), 'src')]
+    simulte_includes = ['-I' + s for s in simulte_header_dirs]
+    simulte_link = ["-L" + os.path.join(os.path.relpath(options.simulte, 'src'), 'src'), "-llte$(D)"]
+    simulte_defs = []
+
+    makemake_flags += simulte_includes + simulte_link + simulte_defs
+    run_libs = [os.path.relpath(os.path.join(options.simulte, 'src', 'lte'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.simulte, 'src'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.simulte, 'images'))] + run_imgs
 {%- endif %}
 
 
