@@ -5,5 +5,8 @@
 (cd inet && make makefiles)
 (cd veins/subprojects/veins_inet && ./configure)
 {%- endif %}
+{%- if cookiecutter.use_veins_vlc == "yes" %}
+(cd veins_vlc && ./configure)
+{%- endif %}
 (cd {{ cookiecutter.project_name_as_file_name }} && ./configure)
 

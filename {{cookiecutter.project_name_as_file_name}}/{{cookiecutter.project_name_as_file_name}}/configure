@@ -39,6 +39,9 @@ if sys.version_info[0] == 3:
 # Option handling
 parser = OptionParser()
 parser.add_option("--with-veins", dest="veins", help="link with a version of Veins installed in PATH", metavar="PATH", default="../veins")
+{%- if cookiecutter.use_veins_vlc == "yes" %}
+parser.add_option("--with-veins-vlc", dest="veins_vlc", help="link with a version of Veins VLC installed in PATH", metavar="PATH", default="../veins_vlc")
+{%- endif %}
 {%- if cookiecutter.use_inet == "yes" %}
 parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH", metavar="PATH", default="../inet")
 parser.add_option("--with-veins-inet", dest="veins_inet", help="link with a version of Veins_INET installed in PATH", metavar="PATH", default="../veins/subprojects/veins_inet")
@@ -145,6 +148,38 @@ if options.veins_inet:
     run_libs = [os.path.relpath(os.path.join(options.veins_inet, 'src', 'veins_inet'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.veins_inet, 'src', 'veins_inet'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.veins_inet, 'images'))] + run_imgs
+{%- endif %}
+{%- if cookiecutter.use_veins_vlc == "yes" %}
+
+
+# Add flags for Veins VLC
+if options.veins_vlc:
+    fname = os.path.join(options.veins_vlc, 'print-veins_vlc-version')
+    expect_version = ['1.0']
+    try:
+        print 'Running "%s" to determine Veins VLC version.' % fname
+        version = subprocess.check_output(['env', fname]).strip()
+        if not version in expect_version:
+            print ''
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            warning('Unsupported Veins VLC Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            print ''
+        else:
+            print 'Found Veins VLC version "%s". Okay.' % version
+    except subprocess.CalledProcessError as e:
+        error('Could not determine Veins VLC Version (by running %s): %s. Check the path to Veins VLC (--with-veins-vlc=... option) and the Veins VLC version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        sys.exit(1)
+
+    veins_vlc_header_dirs = [os.path.join(os.path.relpath(options.veins_vlc, 'src'), 'src')]
+    veins_vlc_includes = ['-I' + s for s in veins_vlc_header_dirs]
+    veins_vlc_link = ["-L" + os.path.join(os.path.relpath(options.veins_vlc, 'src'), 'src'), "-lveins-vlc$(D)"]
+    veins_vlc_defs = []
+
+    makemake_flags += veins_vlc_includes + veins_vlc_link + veins_vlc_defs
+    run_libs = [os.path.relpath(os.path.join(options.veins_vlc, 'src', 'veins-vlc'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.veins_vlc, 'src', 'veins-vlc'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.veins_vlc, 'images'))] + run_imgs
 {%- endif %}
 
 

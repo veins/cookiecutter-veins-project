@@ -8,6 +8,9 @@
 		<project>inet</project>
 		<project>veins_inet</project>
 {%- endif %}
+{%- if cookiecutter.use_veins_vlc == "yes" %}
+		<project>veins-vlc</project>
+{%- endif %}
 	</projects>
 	<buildSpec>
 		<buildCommand>

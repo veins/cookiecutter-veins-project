@@ -38,6 +38,11 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/tutorials', '--me
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/showcases', '--message', 'Merge INET Showcases 4.0.0', 'https://github.com/inet-framework/inet-showcases', 'v4.0.0'])
 {%- endif %}
 
+# Veins VLC
+{%- if cookiecutter.use_veins_vlc == "yes" %}
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins_vlc', '--message', 'Merge Veins VLC 1.0', 'https://github.com/veins/veins_vlc', 'veins-vlc-1.0'])
+{%- endif %}
+
 # Veins
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.0', 'https://github.com/sommer/veins', 'veins-5.0'])
 
