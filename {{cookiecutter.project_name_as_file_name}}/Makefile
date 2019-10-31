@@ -11,6 +11,15 @@ else
 endif
 	$(MAKE) -C veins/subprojects/veins_inet all
 {%- endif %}
+{%- if cookiecutter.use_inet3 == "yes" %}
+ifdef MODE
+	$(MAKE) -C inet all
+else
+	$(MAKE) -C inet all MODE=release
+	$(MAKE) -C inet all MODE=debug
+endif
+	$(MAKE) -C veins/subprojects/veins_inet3 all
+{%- endif %}
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 	$(MAKE) -C veins_vlc all
 {%- endif %}
@@ -23,6 +32,10 @@ clean:
 	$(MAKE) -C veins clean
 {%- if cookiecutter.use_inet == "yes" %}
 	$(MAKE) -C veins/subprojects/veins_inet clean
+	$(MAKE) -C inet clean
+{%- endif %}
+{%- if cookiecutter.use_inet3 == "yes" %}
+	$(MAKE) -C veins/subprojects/veins_inet3 clean
 	$(MAKE) -C inet clean
 {%- endif %}
 {%- if cookiecutter.use_veins_vlc == "yes" %}

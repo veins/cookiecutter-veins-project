@@ -38,6 +38,15 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/tutorials', '--me
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/showcases', '--message', 'Merge INET Showcases 4.0.0', 'https://github.com/inet-framework/inet-showcases', 'v4.0.0'])
 {%- endif %}
 
+# INET (version 3)
+{%- if cookiecutter.use_inet3 == "yes" %}
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.1.1', 'https://github.com/inet-framework/inet', 'v3.6.6'])
+subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
+subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 3.6.4', 'https://github.com/inet-framework/inet-tutorials', 'v3.6.4'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/showcases', '--message', 'Merge INET Showcases 3.6.4', 'https://github.com/inet-framework/inet-showcases', 'v3.6.4'])
+{%- endif %}
+
 # Veins VLC
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins_vlc', '--message', 'Merge Veins VLC 1.0', 'https://github.com/veins/veins_vlc', 'veins-vlc-1.0'])

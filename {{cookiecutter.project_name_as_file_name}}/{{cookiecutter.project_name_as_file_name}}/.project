@@ -8,6 +8,10 @@
 		<project>inet</project>
 		<project>veins_inet</project>
 {%- endif %}
+{%- if cookiecutter.use_inet3 == "yes" %}
+		<project>inet</project>
+		<project>veins_inet3</project>
+{%- endif %}
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 		<project>veins-vlc</project>
 {%- endif %}

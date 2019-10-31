@@ -30,6 +30,10 @@ Select use_inet:
 1 - no
 2 - yes
 Choose from 1, 2 (1, 2) [1]:
+Select use_inet3:
+1 - no
+2 - yes
+Choose from 1, 2 (1, 2) [1]:
 Select use_veins_vlc:
 1 - no
 2 - yes

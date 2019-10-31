@@ -49,6 +49,10 @@ parser.add_option("--with-plexe-veins", dest="plexe_veins", help="link with a ve
 parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH", metavar="PATH", default="../inet")
 parser.add_option("--with-veins-inet", dest="veins_inet", help="link with a version of Veins_INET installed in PATH", metavar="PATH", default="../veins/subprojects/veins_inet")
 {%- endif %}
+{%- if cookiecutter.use_inet3 == "yes" %}
+parser.add_option("--with-inet3", dest="inet3", help="link with a version of the INET Framework installed in PATH", metavar="PATH", default="../inet")
+parser.add_option("--with-veins-inet3", dest="veins_inet3", help="link with a version of Veins_INET installed in PATH", metavar="PATH", default="../veins/subprojects/veins_inet3")
+{%- endif %}
 (options, args) = parser.parse_args()
 
 if args:
@@ -151,6 +155,68 @@ if options.veins_inet:
     run_libs = [os.path.relpath(os.path.join(options.veins_inet, 'src', 'veins_inet'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.veins_inet, 'src', 'veins_inet'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.veins_inet, 'images'))] + run_imgs
+{%- endif %}
+{%- if cookiecutter.use_inet3 == "yes" %}
+
+
+# Add flags for INET (version 3)
+if options.inet3:
+    fname = os.path.join(options.inet3, '_scripts/get_version')
+    expect_version = ['3.6.6']
+    try:
+        print 'Running "%s" to determine INET version.' % fname
+        version = subprocess.check_output(['env', fname]).strip()
+        if not version in expect_version:
+            print ''
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            warning('Unsupported INET Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            print ''
+        else:
+            print 'Found INET version "%s". Okay.' % version
+    except subprocess.CalledProcessError as e:
+        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet3=... option) and the INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        sys.exit(1)
+
+    inet3_header_dirs = [os.path.join(os.path.relpath(options.inet3, 'src'), 'src')]
+    inet3_includes = ['-I' + s for s in inet3_header_dirs]
+    inet3_link = ["-L" + os.path.join(os.path.relpath(options.inet3, 'src'), 'src'), "-lINET$(D)"]
+    inet3_defs = ["-DINET_IMPORT"]
+
+    makemake_flags += inet3_includes + inet3_link + inet3_defs
+    run_libs = [os.path.relpath(os.path.join(options.inet3, 'src', 'INET'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.inet3, 'src'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.inet3, 'images'))] + run_imgs
+
+
+# Add flags for Veins_INET
+if options.veins_inet3:
+    fname = os.path.join(options.veins_inet3, 'print-veins_inet-version')
+    expect_version = ['3.0']
+    try:
+        print 'Running "%s" to determine Veins_INET version.' % fname
+        version = subprocess.check_output(['env', fname]).strip()
+        if not version in expect_version:
+            print ''
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            warning('Unsupported Veins_INET Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            print ''
+        else:
+            print 'Found Veins_INET version "%s". Okay.' % version
+    except OSError as e:
+        error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        sys.exit(1)
+
+    veins_header_dirs = [os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src')]
+    veins_includes = ['-I' + s for s in veins_header_dirs]
+    veins_link = ["-L" + os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src'), "-lveins$(D)"]
+    veins_defs = []
+
+    makemake_flags += veins_includes + veins_link + veins_defs
+    run_libs = [os.path.relpath(os.path.join(options.veins_inet3, 'src', 'veins_inet'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.veins_inet3, 'src', 'veins_inet'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.veins_inet3, 'images'))] + run_imgs
 {%- endif %}
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 
