@@ -34,6 +34,10 @@ Select use_veins_vlc:
 1 - no
 2 - yes
 Choose from 1, 2 (1, 2) [1]:
+Select use_plexe_veins:
+1 - no
+2 - yes
+Choose from 1, 2 (1, 2) [1]:
 Cookiecutter checks starting.
 Making sure we can run git
 git version 2.23.0

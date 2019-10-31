@@ -43,6 +43,11 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/showcases', '--me
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins_vlc', '--message', 'Merge Veins VLC 1.0', 'https://github.com/veins/veins_vlc', 'veins-vlc-1.0'])
 {%- endif %}
 
+# Plexe Veins
+{%- if cookiecutter.use_plexe_veins == "yes" %}
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe_veins', '--message', 'Merge Plexe Veins 3.0-alpha1', 'https://github.com/michele-segata/plexe-veins', 'plexe-3.0a1'])
+{%- endif %}
+
 # Veins
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.0', 'https://github.com/sommer/veins', 'veins-5.0'])
 

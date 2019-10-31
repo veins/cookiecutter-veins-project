@@ -5,5 +5,6 @@
     "project_name_as_macro_name": "{{ cookiecutter.project_name | upper | replace(' ', '_') | replace('-', '_') | replace('.', '_') | urlencode | replace('%', '') }}",
     "use_inet": ["no", "yes"],
     "use_veins_vlc": ["no", "yes"],
+    "use_plexe_veins": ["no", "yes"],
     "_dummy": ""
 }

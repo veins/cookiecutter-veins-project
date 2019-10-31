@@ -8,5 +8,8 @@
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 (cd veins_vlc && ./configure)
 {%- endif %}
+{%- if cookiecutter.use_plexe_veins == "yes" %}
+(cd plexe_veins && ./configure --with-veins=../veins)
+{%- endif %}
 (cd {{ cookiecutter.project_name_as_file_name }} && ./configure)
 

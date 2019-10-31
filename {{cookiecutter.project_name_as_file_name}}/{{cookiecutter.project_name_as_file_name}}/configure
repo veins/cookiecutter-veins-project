@@ -42,6 +42,9 @@ parser.add_option("--with-veins", dest="veins", help="link with a version of Vei
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 parser.add_option("--with-veins-vlc", dest="veins_vlc", help="link with a version of Veins VLC installed in PATH", metavar="PATH", default="../veins_vlc")
 {%- endif %}
+{%- if cookiecutter.use_plexe_veins == "yes" %}
+parser.add_option("--with-plexe-veins", dest="plexe_veins", help="link with a version of Plexe Veins installed in PATH", metavar="PATH", default="../plexe_veins")
+{%- endif %}
 {%- if cookiecutter.use_inet == "yes" %}
 parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH", metavar="PATH", default="../inet")
 parser.add_option("--with-veins-inet", dest="veins_inet", help="link with a version of Veins_INET installed in PATH", metavar="PATH", default="../veins/subprojects/veins_inet")
@@ -180,6 +183,38 @@ if options.veins_vlc:
     run_libs = [os.path.relpath(os.path.join(options.veins_vlc, 'src', 'veins-vlc'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.veins_vlc, 'src', 'veins-vlc'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.veins_vlc, 'images'))] + run_imgs
+{%- endif %}
+{%- if cookiecutter.use_plexe_veins == "yes" %}
+
+
+# Add flags for Plexe Veins
+if options.plexe_veins:
+    fname = os.path.join(options.plexe_veins, 'src', 'plexe', 'plexe.h')
+    expect_version = ['3.0-alpha1']
+    try:
+        print 'Running "%s" to determine Plexe Veins version.' % fname
+        version = subprocess.check_output(['env', 'cat', fname]).strip()
+        if not version:
+            print ''
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            warning('Unsupported Plexe Veins Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+            print ''
+        else:
+            print 'Found Plexe Veins version "%s". Okay.' % version
+    except subprocess.CalledProcessError as e:
+        error('Could not determine Plexe Veins Version (by running %s): %s. Check the path to Plexe Veins (--with-plexe-veins=... option) and the Plexe Veins version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        sys.exit(1)
+
+    plexe_veins_header_dirs = [os.path.join(os.path.relpath(options.plexe_veins, 'src'), 'src')]
+    plexe_veins_includes = ['-I' + s for s in plexe_veins_header_dirs]
+    plexe_veins_link = ["-L" + os.path.join(os.path.relpath(options.plexe_veins, 'src'), 'src'), "-lplexe$(D)"]
+    plexe_veins_defs = []
+
+    makemake_flags += plexe_veins_includes + plexe_veins_link + plexe_veins_defs
+    run_libs = [os.path.relpath(os.path.join(options.plexe_veins, 'src', 'plexe'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.plexe_veins, 'src', 'plexe'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.plexe_veins, 'images'))] + run_imgs
 {%- endif %}
 
 

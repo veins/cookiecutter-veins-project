@@ -14,6 +14,9 @@ endif
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 	$(MAKE) -C veins_vlc all
 {%- endif %}
+{%- if cookiecutter.use_plexe_veins == "yes" %}
+	$(MAKE) -C plexe_veins all
+{%- endif %}
 	$(MAKE) -C {{ cookiecutter.project_name_as_file_name }} all
 
 clean:
@@ -24,5 +27,8 @@ clean:
 {%- endif %}
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 	$(MAKE) -C veins_vlc clean
+{%- endif %}
+{%- if cookiecutter.use_plexe_veins == "yes" %}
+	$(MAKE) -C plexe_veins clean
 {%- endif %}
 	$(MAKE) -C {{ cookiecutter.project_name_as_file_name }} clean
