@@ -65,6 +65,10 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message',
 # Veins
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.0', 'https://github.com/sommer/veins', 'veins-5.0'])
 
+# Cookiecutter project
+subprocess.check_call(['git', 'add', '.'])
+subprocess.check_call(['git', 'commit', '--message', '{{ cookiecutter.project_name_as_file_name }}: Add skeleton for {{ cookiecutter.project_name }}'])
+
 print('Repository set up successful. Running git commands to clean up.')
 subprocess.check_call(['git', 'config', '--unset', 'user.name'])
 subprocess.check_call(['git', 'config', '--unset', 'user.email'])
