@@ -149,12 +149,12 @@ if options.veins_inet:
         error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
         sys.exit(1)
 
-    veins_header_dirs = [os.path.join(os.path.relpath(options.veins_inet, 'src'), 'src')]
-    veins_includes = ['-I' + s for s in veins_header_dirs]
-    veins_link = ["-L" + os.path.join(os.path.relpath(options.veins_inet, 'src'), 'src'), "-lveins$(D)"]
-    veins_defs = []
+    veins_inet_header_dirs = [os.path.join(os.path.relpath(options.veins_inet, 'src'), 'src')]
+    veins_inet_includes = ['-I' + s for s in veins_inet_header_dirs]
+    veins_inet_link = ["-L" + os.path.join(os.path.relpath(options.veins_inet, 'src'), 'src'), "-lveins_inet$(D)"]
+    veins_inet_defs = []
 
-    makemake_flags += veins_includes + veins_link + veins_defs
+    makemake_flags += veins_inet_includes + veins_inet_link + veins_inet_defs
     run_libs = [os.path.relpath(os.path.join(options.veins_inet, 'src', 'veins_inet'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.veins_inet, 'src', 'veins_inet'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.veins_inet, 'images'))] + run_imgs
@@ -211,12 +211,12 @@ if options.veins_inet3:
         error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
         sys.exit(1)
 
-    veins_header_dirs = [os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src')]
-    veins_includes = ['-I' + s for s in veins_header_dirs]
-    veins_link = ["-L" + os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src'), "-lveins$(D)"]
-    veins_defs = []
+    veins_inet3_header_dirs = [os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src')]
+    veins_inet3_includes = ['-I' + s for s in veins_inet3_header_dirs]
+    veins_inet3_link = ["-L" + os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src'), "-lveins_inet$(D)"]
+    veins_inet3_defs = []
 
-    makemake_flags += veins_includes + veins_link + veins_defs
+    makemake_flags += veins_inet3_includes + veins_inet3_link + veins_inet3_defs
     run_libs = [os.path.relpath(os.path.join(options.veins_inet3, 'src', 'veins_inet'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.veins_inet3, 'src', 'veins_inet'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.veins_inet3, 'images'))] + run_imgs
