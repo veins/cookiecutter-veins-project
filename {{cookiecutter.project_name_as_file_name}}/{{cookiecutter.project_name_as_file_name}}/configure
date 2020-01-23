@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 #
 # Copyright (C) 2013-2019 Christoph Sommer <sommer@ccs-labs.org>
@@ -32,9 +32,19 @@ import subprocess
 from logging import info, warning, error
 from optparse import OptionParser
 
+# check python version
+if sys.version_info[0] < 3:
+    warning("Warning: running configure with Python 2 might result in subtle errors.")
 
-if sys.version_info[0] == 3:
-    warning("Warning: running configure with python3 might result in subtle errors.")
+# pretty-print version
+def version_to_hr(v):
+    s = '"%s"' % v.decode(errors='replace')
+    return(s)
+
+# pretty-print list of versions
+def versions_to_hr(vv):
+    s = ' or '.join([version_to_hr(v) for v in vv])
+    return(s)
 
 # Option handling
 parser = OptionParser()
@@ -72,20 +82,20 @@ run_imgs = [os.path.join('images')]
 # Add flags for Veins
 if options.veins:
     fname = os.path.join(options.veins, 'print-veins-version')
-    expect_version = ['5.0']
+    expect_version = [b'5.0']
     try:
-        print 'Running "%s" to determine Veins version.' % fname
+        info('Running "%s" to determine Veins version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported Veins Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported Veins Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found Veins version "%s". Okay.' % version
+            info('Found Veins version "%s". Okay.' % version)
     except subprocess.CalledProcessError as e:
-        error('Could not determine Veins Version (by running %s): %s. Check the path to Veins (--with-veins=... option) and the Veins version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine Veins Version (by running %s): %s. Check the path to Veins (--with-veins=... option) and the Veins version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     veins_header_dirs = [os.path.join(os.path.relpath(options.veins, 'src'), 'src')]
@@ -103,20 +113,20 @@ if options.veins:
 # Add flags for INET
 if options.inet:
     fname = os.path.join(options.inet, '_scripts/get_version')
-    expect_version = ['4.1.0', '4.1.1']
+    expect_version = [b'4.1.0', b'4.1.1']
     try:
-        print 'Running "%s" to determine INET version.' % fname
+        info('Running "%s" to determine INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported INET Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found INET version "%s". Okay.' % version
+            info('Found INET version "%s". Okay.' % version)
     except subprocess.CalledProcessError as e:
-        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     inet_header_dirs = [os.path.join(os.path.relpath(options.inet, 'src'), 'src')]
@@ -133,20 +143,20 @@ if options.inet:
 # Add flags for Veins_INET
 if options.veins_inet:
     fname = os.path.join(options.veins_inet, 'print-veins_inet-version')
-    expect_version = ['4.0']
+    expect_version = [b'4.0']
     try:
-        print 'Running "%s" to determine Veins_INET version.' % fname
+        info('Running "%s" to determine Veins_INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported Veins_INET Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported Veins_INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found Veins_INET version "%s". Okay.' % version
+            info('Found Veins_INET version "%s". Okay.' % version)
     except OSError as e:
-        error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     veins_inet_header_dirs = [os.path.join(os.path.relpath(options.veins_inet, 'src'), 'src')]
@@ -165,20 +175,20 @@ if options.veins_inet:
 # Add flags for INET (version 3)
 if options.inet3:
     fname = os.path.join(options.inet3, '_scripts/get_version')
-    expect_version = ['3.6.6']
+    expect_version = [b'3.6.6']
     try:
-        print 'Running "%s" to determine INET version.' % fname
+        info('Running "%s" to determine INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported INET Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found INET version "%s". Okay.' % version
+            info('Found INET version "%s". Okay.' % version)
     except subprocess.CalledProcessError as e:
-        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet3=... option) and the INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet3=... option) and the INET version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     inet3_header_dirs = [os.path.join(os.path.relpath(options.inet3, 'src'), 'src')]
@@ -195,20 +205,20 @@ if options.inet3:
 # Add flags for Veins_INET
 if options.veins_inet3:
     fname = os.path.join(options.veins_inet3, 'print-veins_inet-version')
-    expect_version = ['3.0']
+    expect_version = [b'3.0']
     try:
-        print 'Running "%s" to determine Veins_INET version.' % fname
+        info('Running "%s" to determine Veins_INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported Veins_INET Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported Veins_INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found Veins_INET version "%s". Okay.' % version
+            info('Found Veins_INET version "%s". Okay.' % version)
     except OSError as e:
-        error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine Veins_INET Version (by running %s): %s. Check the path to Veins_INET (--with-veins=... option) and the Veins_INET version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     veins_inet3_header_dirs = [os.path.join(os.path.relpath(options.veins_inet3, 'src'), 'src')]
@@ -227,20 +237,20 @@ if options.veins_inet3:
 # Add flags for Veins VLC
 if options.veins_vlc:
     fname = os.path.join(options.veins_vlc, 'print-veins_vlc-version')
-    expect_version = ['1.0']
+    expect_version = [b'1.0']
     try:
-        print 'Running "%s" to determine Veins VLC version.' % fname
+        info('Running "%s" to determine Veins VLC version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported Veins VLC Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported Veins VLC Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found Veins VLC version "%s". Okay.' % version
+            info('Found Veins VLC version "%s". Okay.' % version)
     except subprocess.CalledProcessError as e:
-        error('Could not determine Veins VLC Version (by running %s): %s. Check the path to Veins VLC (--with-veins-vlc=... option) and the Veins VLC version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine Veins VLC Version (by running %s): %s. Check the path to Veins VLC (--with-veins-vlc=... option) and the Veins VLC version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     veins_vlc_header_dirs = [os.path.join(os.path.relpath(options.veins_vlc, 'src'), 'src')]
@@ -259,20 +269,20 @@ if options.veins_vlc:
 # Add flags for Plexe Veins
 if options.plexe_veins:
     fname = os.path.join(options.plexe_veins, 'src', 'plexe', 'plexe.h')
-    expect_version = ['3.0-alpha1']
+    expect_version = [b'3.0-alpha1']
     try:
-        print 'Running "%s" to determine Plexe Veins version.' % fname
+        info('Running "%s" to determine Plexe Veins version.' % fname)
         version = subprocess.check_output(['env', 'cat', fname]).strip()
         if not version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported Plexe Veins Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported Plexe Veins Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found Plexe Veins version "%s". Okay.' % version
+            info('Found Plexe Veins version "%s". Okay.' % version)
     except subprocess.CalledProcessError as e:
-        error('Could not determine Plexe Veins Version (by running %s): %s. Check the path to Plexe Veins (--with-plexe-veins=... option) and the Plexe Veins version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine Plexe Veins Version (by running %s): %s. Check the path to Plexe Veins (--with-plexe-veins=... option) and the Plexe Veins version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     plexe_veins_header_dirs = [os.path.join(os.path.relpath(options.plexe_veins, 'src'), 'src')]
@@ -291,20 +301,20 @@ if options.plexe_veins:
 # Add flags for SimuLTE
 if options.simulte:
     fname = os.path.join(options.simulte, 'Version')
-    expect_version = ['v1.1.0']
+    expect_version = [b'v1.1.0']
     try:
-        print 'Running "%s" to determine SimuLTE version.' % fname
+        info('Running "%s" to determine SimuLTE version.' % fname)
         version = subprocess.check_output(['env', 'cat', fname]).strip()
         if not version in expect_version:
-            print ''
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            warning('Unsupported SimuLTE Version. Expecting %s, found "%s"' % (' or '.join(expect_version), version))
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-            print ''
+            warning('')
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('Unsupported SimuLTE Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            warning('')
         else:
-            print 'Found SimuLTE version "%s". Okay.' % version
+            info('Found SimuLTE version "%s". Okay.' % version)
     except subprocess.CalledProcessError as e:
-        error('Could not determine SimuLTE Version (by running %s): %s. Check the path to SimuLTE (--with-simulte=... option) and the SimuLTE version (should be version %s)' % (fname, e, ' or '.join(expect_version)))
+        error('Could not determine SimuLTE Version (by running %s): %s. Check the path to SimuLTE (--with-simulte=... option) and the SimuLTE version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
     simulte_header_dirs = [os.path.join(os.path.relpath(options.simulte, 'src'), 'src')]
