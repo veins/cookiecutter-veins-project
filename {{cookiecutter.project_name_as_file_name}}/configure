@@ -24,23 +24,23 @@
 
 set -e
 
-(cd veins && ./configure)
+(cd veins && ./configure "$@")
 {%- if cookiecutter.use_inet == "yes" %}
 (cd inet && make makefiles)
-(cd veins/subprojects/veins_inet && ./configure)
+(cd veins/subprojects/veins_inet && ./configure "$@")
 {%- endif %}
 {%- if cookiecutter.use_inet3 == "yes" %}
 (cd inet && make makefiles)
-(cd veins/subprojects/veins_inet3 && ./configure)
+(cd veins/subprojects/veins_inet3 && ./configure "$@")
 {%- endif %}
 {%- if cookiecutter.use_veins_vlc == "yes" %}
-(cd veins_vlc && ./configure)
+(cd veins_vlc && ./configure "$@")
 {%- endif %}
 {%- if cookiecutter.use_plexe_veins == "yes" %}
-(cd plexe_veins && ./configure --with-veins=../veins)
+(cd plexe_veins && ./configure --with-veins=../veins "$@")
 {%- endif %}
 {%- if cookiecutter.use_simulte == "yes" %}
 (cd simulte && make makefiles)
 {%- endif %}
-(cd {{ cookiecutter.project_name_as_file_name }} && ./configure)
+(cd {{ cookiecutter.project_name_as_file_name }} && ./configure "$@")
 
