@@ -40,7 +40,7 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/showcases', '--me
 
 # INET (version 3)
 {%- if cookiecutter.use_inet3 == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 3.6.6', 'https://github.com/inet-framework/inet', 'v3.6.6'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 3.6.7', 'https://github.com/inet-framework/inet', 'v3.6.7'])
 subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
 subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules'])
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 3.6.4', 'https://github.com/inet-framework/inet-tutorials', 'v3.6.4'])
