@@ -39,8 +39,9 @@ def relpath(s):
     return os.path.relpath(os.path.join(veins_root, s), '.')
 
 parser = argparse.ArgumentParser('Run a {{ cookiecutter.project_name }} simulation')
-parser.add_argument('-d', '--debug', action='store_true', help='Run using opp_run_dbg (instead of opp_run)')
-parser.add_argument('-t', '--tool', metavar='TOOL', dest='tool', choices=['lldb', 'gdb', 'memcheck'], help='Wrap opp_run execution in TOOL (lldb, gdb or memcheck)')
+parser.add_argument('-d', '--debug', action='store_true', help='Set --mode=debug (deprecated in favor of --mode)')
+parser.add_argument('-M', '--mode', metavar='MODE', dest='mode', choices=['', 'release', 'debug', 'sanitize'], help='Instead of opp_run, use opp_run_VARIANT corresponding to MODE (release, debug, sanitize)')
+parser.add_argument('-t', '--tool', metavar='TOOL', dest='tool', choices=['lldb', 'gdb', 'memcheck', 'callgrind'], help='Wrap opp_run execution in TOOL (lldb, gdb, memcheck, or callgrind)')
 parser.add_argument('-v', '--verbose', action='store_true', help='Print command line before executing')
 parser.add_argument('--', dest='arguments', help='Arguments to pass to opp_run')
 args, omnet_args = parser.parse_known_args()
@@ -53,7 +54,18 @@ run_imgs = [relpath(s) for s in run_imgs]
 
 opp_run = 'opp_run'
 if args.debug:
-    opp_run = 'opp_run_dbg'
+    args.mode = 'debug'
+if args.mode:
+    if args.mode == '':
+        opp_run = 'opp_run'
+    elif args.mode == 'release':
+        opp_run = 'opp_run_release'
+    elif args.mode == 'debug':
+        opp_run = 'opp_run_dbg'
+    elif args.mode == 'sanitize':
+        opp_run = 'opp_run_sanitize'
+    else:
+        assert False, 'unknown --mode option'
 
 lib_flags = ['-l%s' % s for s in run_libs]
 ned_flags = ['-n' + ';'.join(run_neds)]
@@ -66,6 +78,8 @@ if args.tool == 'gdb':
     prefix = ['gdb', '--args']
 if args.tool == 'memcheck':
     prefix = ['valgrind', '--tool=memcheck', '--leak-check=full', '--dsymutil=yes', '--log-file=valgrind.out']
+if args.tool == 'callgrind':
+    prefix = ['valgrind', '--tool=callgrind', '--log-file=callgrind.out']
 
 cmdline = prefix + [opp_run] + lib_flags + ned_flags + img_flags + omnet_args
 
