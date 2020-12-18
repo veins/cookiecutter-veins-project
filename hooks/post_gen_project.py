@@ -31,16 +31,16 @@ subprocess.check_call(['git', 'commit', '--allow-empty', '--message', 'Initial c
 
 # INET
 {%- if cookiecutter.use_inet == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.1.1', 'https://github.com/inet-framework/inet', 'v4.1.1'])
-subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
-subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.2.1', 'https://github.com/inet-framework/inet', 'v4.2.1'])
+#subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
+#subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 4.0.0', 'https://github.com/inet-framework/inet-tutorials', 'v4.0.0'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/showcases', '--message', 'Merge INET Showcases 4.0.0', 'https://github.com/inet-framework/inet-showcases', 'v4.0.0'])
 {%- endif %}
 
 # INET (version 3)
 {%- if cookiecutter.use_inet3 == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 3.6.7', 'https://github.com/inet-framework/inet', 'v3.6.7'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 3.6.8', 'https://github.com/inet-framework/inet', 'v3.6.8'])
 subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
 subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 3.6.4', 'https://github.com/inet-framework/inet-tutorials', 'v3.6.4'])
@@ -63,7 +63,7 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message',
 {%- endif %}
 
 # Veins
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.0', 'https://github.com/sommer/veins', 'veins-5.0'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.1', 'https://github.com/sommer/veins', 'veins-5.1'])
 
 # Cookiecutter project
 subprocess.check_call(['git', 'add', '.'])

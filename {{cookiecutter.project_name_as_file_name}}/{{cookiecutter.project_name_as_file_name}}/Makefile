@@ -27,7 +27,7 @@
 ADDL_TARGETS =
 ifeq ($(wildcard out/config.py),)
 else
-    ADDL_TARGETS += run
+    ADDL_TARGETS += bin/{{cookiecutter.project_name_as_file_name}}_run
 endif
 
 # default target
@@ -40,8 +40,8 @@ else
 endif
 
 # command line scripts
-run: % : src/scripts/%.in.py out/config.py
-	@echo "Creating script \"./$@\""
+bin/{{cookiecutter.project_name_as_file_name}}_run: src/scripts/{{cookiecutter.project_name_as_file_name}}_run.in.py out/config.py
+	@echo "Creating script \"$@\""
 	@sed '/# v-- contents of out\/config.py go here/r out/config.py' "$<" > "$@"
 	@chmod a+x "$@"
 
@@ -70,7 +70,7 @@ endif
 cleanall: clean
 	rm -f src/Makefile
 	rm -f out/config.py
-	rm -f run
+	rm -f bin/{{cookiecutter.project_name_as_file_name}}_run
 
 src/Makefile:
 	@echo
@@ -98,7 +98,7 @@ doxyshow: doxy
 	xdg-open doc/doxy/index.html
 
 formatting:
-	./format-code.sh src
+	bin/veins_format_code src
 
 formatting-strict:
-	./format-code.sh --strict src
+	bin/veins_format_code --strict src

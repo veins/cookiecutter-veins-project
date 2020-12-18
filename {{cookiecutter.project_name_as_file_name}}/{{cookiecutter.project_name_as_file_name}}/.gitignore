@@ -8,7 +8,7 @@ src/**/*_m.cc
 doc/doxy
 doc/neddoc
 
-/run
+/bin/{{cookiecutter.project_name_as_file_name}}_run
 
 /out
 
