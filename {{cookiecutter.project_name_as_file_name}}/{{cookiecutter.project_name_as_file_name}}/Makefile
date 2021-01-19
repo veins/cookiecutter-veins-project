@@ -98,7 +98,7 @@ doxyshow: doxy
 	xdg-open doc/doxy/index.html
 
 formatting:
-	bin/veins_format_code src
+	bin/{{cookiecutter.project_name_as_file_name}}_format_code src
 
 formatting-strict:
-	bin/veins_format_code --strict src
+	bin/{{cookiecutter.project_name_as_file_name}}_format_code --strict src
