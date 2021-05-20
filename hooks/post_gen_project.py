@@ -20,7 +20,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-
+import os
 import subprocess
 
 print('Cookiecutter successful. Running git commands to set up repository.')
@@ -62,6 +62,12 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe_veins', '--messa
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message', 'Merge SimuLTE 1.1.0', 'https://github.com/inet-framework/simulte.git', 'v1.1.0'])
 {%- endif %}
 
+# Simu5G
+{%- if cookiecutter.use_simu5g == "yes" %}
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G Master', 'https://github.com/Unipisa/Simu5G.git', 'master'])
+
+{%- endif %}
+
 # Veins
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.1', 'https://github.com/sommer/veins', 'veins-5.1'])
 
@@ -72,5 +78,34 @@ subprocess.check_call(['git', 'commit', '--message', '{{ cookiecutter.project_na
 print('Repository set up successful. Running git commands to clean up.')
 subprocess.check_call(['git', 'config', '--unset', 'user.name'])
 subprocess.check_call(['git', 'config', '--unset', 'user.email'])
+
+
+
+# Change inet references for Simu5G to 'inet' instead of 'inet4'
+{%- if cookiecutter.use_simu5g == "yes" %}
+
+# '.project' file
+with open(os.getcwd() + "/simu5g/.project", "r") as file:
+    data = file.readlines()
+data[5] =" 		<project>inet</project>\n<project>veins</project>\n<project>veins_inet</project>\n"
+with open(os.getcwd() + "/simu5g/.project", "w") as file:
+    file.writelines(data)
+
+# Makefile
+with open(os.getcwd() + "/simu5g/Makefile", "r") as file:
+    data = file.readlines()
+data[15] ="	@cd src && opp_makemake --make-so -f --deep -o simu5g -O out -KINET_PROJ=../../inet -DINET_IMPORT -I. -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -lINET$$\(D\)\n"
+with open(os.getcwd() + "/simu5g/Makefile", "w") as file:
+    file.writelines(data)
+
+# bin
+with open(os.getcwd() + "/simu5g/bin/simu5g", "r") as file:
+    data = file.readlines()
+data[3] ="INET_SRC=`(cd $SIMU5G_ROOT/../inet/src ; pwd)`\n"
+with open(os.getcwd() + "/simu5g/bin/simu5g", "w") as file:
+    file.writelines(data)
+
+{%- endif %}
+
 
 print('Cookiecutter successful.')

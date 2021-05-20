@@ -49,6 +49,14 @@ endif
 {%- if cookiecutter.use_plexe_veins == "yes" %}
 	$(MAKE) -C plexe_veins all
 {%- endif %}
+{%- if cookiecutter.use_simu5g == "yes" %}
+ifdef MODE
+	$(MAKE) -C simu5g all
+else
+	$(MAKE) -C simu5g all MODE=release
+	$(MAKE) -C simu5g all MODE=debug
+endif
+{%- endif %}
 {%- if cookiecutter.use_simulte == "yes" %}
 ifdef MODE
 	$(MAKE) -C simulte all
@@ -74,6 +82,9 @@ clean:
 {%- endif %}
 {%- if cookiecutter.use_plexe_veins == "yes" %}
 	$(MAKE) -C plexe_veins clean
+{%- endif %}
+{%- if cookiecutter.use_simu5g == "yes" %}
+	$(MAKE) -C simu5g clean
 {%- endif %}
 {%- if cookiecutter.use_simulte == "yes" %}
 	$(MAKE) -C simulte clean
