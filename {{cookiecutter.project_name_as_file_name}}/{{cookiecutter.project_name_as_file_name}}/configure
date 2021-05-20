@@ -61,6 +61,9 @@ parser.add_option("--with-plexe-veins", dest="plexe_veins", help="link with a ve
 {%- if cookiecutter.use_simulte == "yes" %}
 parser.add_option("--with-simulte", dest="simulte", help="link with a version of SimuLTE installed in PATH", metavar="PATH", default="../simulte")
 {%- endif %}
+{%- if cookiecutter.use_simu5g == "yes" %}
+parser.add_option("--with-simu5g", dest="simu5g", help="link with a version of SimuLTE installed in PATH", metavar="PATH", default="../simu5g")
+{%- endif %}
 {%- if cookiecutter.use_inet == "yes" %}
 parser.add_option("--with-inet", dest="inet", help="link with a version of the INET Framework installed in PATH", metavar="PATH", default="../inet")
 parser.add_option("--with-veins-inet", dest="veins_inet", help="link with a version of Veins_INET installed in PATH", metavar="PATH", default="../veins/subprojects/veins_inet")
@@ -333,6 +336,22 @@ if options.simulte:
     run_libs = [os.path.relpath(os.path.join(options.simulte, 'src', 'lte'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.simulte, 'src'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.simulte, 'images'))] + run_imgs
+{%- endif %}
+{%- if cookiecutter.use_simu5g == "yes" %}
+
+# Add flags for Simu5G
+if options.simu5g:
+    fname = os.path.join(options.simu5g, 'Version')
+
+    simu5g_header_dirs = [os.path.join(os.path.relpath(options.simu5g, 'src'), 'src')]
+    simu5g_includes = ['-I' + s for s in simu5g_header_dirs]
+    simu5g_link = ["-L" + os.path.join(os.path.relpath(options.simu5g, 'src'), 'src'), "-lsimu5g$(D)"]
+    simu5g_defs = []
+
+    makemake_flags += simu5g_includes + simu5g_link + simu5g_defs
+    run_libs = [os.path.relpath(os.path.join(options.simu5g, 'src', 'simu5G'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.simu5g, 'src'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.simu5g, 'images'))] + run_imgs
 {%- endif %}
 
 

@@ -30,6 +30,7 @@ project_name_as_macro_name = '{{ cookiecutter.project_name_as_macro_name }}'
 use_inet = '{{ cookiecutter.use_inet }}'
 use_inet3 = '{{ cookiecutter.use_inet3 }}'
 use_simulte = '{{ cookiecutter.use_simulte }}'
+use_simu5g = '{{ cookiecutter.use_simu5g }}'
 
 print('Cookiecutter checks starting.')
 
@@ -50,6 +51,10 @@ if use_inet == "yes" and use_inet3 == "yes":
 
 if use_simulte == "yes" and use_inet3 != "yes":
     print('ERROR: use_simulte requires use_inet3 (SimuLTE requires INET version 3).')
+    sys.exit(1)
+
+if use_simu5g == "yes" and use_inet == "no":
+    print('ERROR: use_simu5g requires use_inet (SIMU5G requires INET version 4).')
     sys.exit(1)
 
 print('Cookiecutter checks successful.')

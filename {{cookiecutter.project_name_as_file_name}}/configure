@@ -42,5 +42,9 @@ set -e
 {%- if cookiecutter.use_simulte == "yes" %}
 (cd simulte && make makefiles)
 {%- endif %}
+{%- if cookiecutter.use_simu5g == "yes" %}
+(cd simu5g && make makefiles)
+{%- endif %}
+
 (cd {{ cookiecutter.project_name_as_file_name }} && ./configure "$@")
 
