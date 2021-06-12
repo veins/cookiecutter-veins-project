@@ -311,7 +311,7 @@ if options.plexe_veins:
 # Add flags for SimuLTE
 if options.simulte:
     fname = os.path.join(options.simulte, 'Version')
-    expect_version = [b'v1.1.0']
+    expect_version = [b'v1.1.0', b'v1.2.0-inet4.2.2']
     try:
         info('Running "%s" to determine SimuLTE version.' % fname)
         version = subprocess.check_output(['env', 'cat', fname]).strip()
