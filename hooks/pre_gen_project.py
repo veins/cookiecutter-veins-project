@@ -49,8 +49,8 @@ if use_inet == "yes" and use_inet3 == "yes":
     print('ERROR: use_inet and use_inet3 cannot both be "yes" (these two versions of the INET framework cannot coexist).')
     sys.exit(1)
 
-if use_simulte == "yes" and use_inet3 != "yes":
-    print('ERROR: use_simulte requires use_inet3 (SimuLTE requires INET version 3).')
+if use_simulte == "yes" and use_inet == "no":
+    print('ERROR: use_simulte requires use_inet (SimuLTE requires INET version 4).')
     sys.exit(1)
 
 if use_simu5g == "yes" and use_inet == "no":

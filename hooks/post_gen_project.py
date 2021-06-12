@@ -59,7 +59,13 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe_veins', '--messa
 
 # SimuLTE
 {%- if cookiecutter.use_simulte == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message', 'Merge SimuLTE 1.1.0', 'https://github.com/inet-framework/simulte.git', 'v1.1.0'])
+# subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message', 'Merge SimuLTE 1.1.0', 'https://github.com/inet-framework/simulte.git', 'v1.1.0'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=simulte', '--message', 'Merge SimuLTE 1.2.0', 'https://github.com/inet-framework/simulte.git', 'v1.2.0'])
+# add simulte as remote such that the patch for inet4 can be cherry-picked. The remote is deleted afterwards.
+subprocess.check_call(['git', 'remote', 'add', 'simulte_remote', 'https://github.com/inet-framework/simulte.git'])
+subprocess.check_call(['git', 'fetch', 'simulte_remote'])
+subprocess.check_call(['git', 'cherry-pick', '23c0936e31'])
+subprocess.check_call(['git', 'remote', 'remove', 'simulte_remote'])
 {%- endif %}
 
 # Simu5G
@@ -80,6 +86,31 @@ subprocess.check_call(['git', 'config', '--unset', 'user.name'])
 subprocess.check_call(['git', 'config', '--unset', 'user.email'])
 
 
+# Change inet references for SimuLTE to 'inet' instead of 'inet4'
+{%- if cookiecutter.use_simulte == "yes" %}
+
+# '.project' file
+with open(os.getcwd() + "/simulte/.project", "r") as file:
+    data = file.readlines()
+data[5] ="\t\t<project>inet</project>\n\t\t<project>veins</project>\n\t\t<project>veins_inet</project>\n"
+with open(os.getcwd() + "/simulte/.project", "w") as file:
+    file.writelines(data)
+
+# Makefile
+with open(os.getcwd() + "/simulte/Makefile", "r") as file:
+    data = file.readlines()
+data[15] = "\t@cd src && opp_makemake --make-so -f --deep -o lte -pSIMULTE -O out -KINET_PROJ=../../inet -DINET_IMPORT -I. -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -lINET$$\(D\)\n"
+with open(os.getcwd() + "/simulte/Makefile", "w") as file:
+    file.writelines(data)
+
+# src/run_lte
+with open(os.getcwd() + "/simulte/src/run_lte", "r") as file:
+    data = file.readlines()
+data[3] = "INET_DIR=$(cd $DIR/../../inet/src ; pwd)\n"
+with open(os.getcwd() + "/simulte/src/run_lte", "w") as file:
+    file.writelines(data)
+
+{%- endif %}
 
 # Change inet references for Simu5G to 'inet' instead of 'inet4'
 {%- if cookiecutter.use_simu5g == "yes" %}
