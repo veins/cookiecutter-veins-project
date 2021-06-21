@@ -85,6 +85,18 @@ print('Repository set up successful. Running git commands to clean up.')
 subprocess.check_call(['git', 'config', '--unset', 'user.name'])
 subprocess.check_call(['git', 'config', '--unset', 'user.email'])
 
+# Remove 'tutorials' and 'showcases' in the inet3 .nedfolders file
+{%- if cookiecutter.use_inet3 == "yes" %}
+
+# '.nedfolders' file
+with open(os.getcwd() + "/inet/.nedfolders", "r") as file:
+    data = file.readlines()
+data[2] =""
+data[3] =""
+with open(os.getcwd() + "/inet/.nedfolders", "w") as file:
+    file.writelines(data)
+
+{%- endif %}
 
 # Change inet references for SimuLTE to 'inet' instead of 'inet4'
 {%- if cookiecutter.use_simulte == "yes" %}
