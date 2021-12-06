@@ -55,8 +55,8 @@ parser.add_option("--with-veins", dest="veins", help="link with a version of Vei
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 parser.add_option("--with-veins-vlc", dest="veins_vlc", help="link with a version of Veins VLC installed in PATH", metavar="PATH", default="../veins_vlc")
 {%- endif %}
-{%- if cookiecutter.use_plexe_veins == "yes" %}
-parser.add_option("--with-plexe-veins", dest="plexe_veins", help="link with a version of Plexe Veins installed in PATH", metavar="PATH", default="../plexe_veins")
+{%- if cookiecutter.use_plexe == "yes" %}
+parser.add_option("--with-plexe", dest="plexe", help="link with a version of Plexe installed in PATH", metavar="PATH", default="../plexe")
 {%- endif %}
 {%- if cookiecutter.use_simulte == "yes" %}
 parser.add_option("--with-simulte", dest="simulte", help="link with a version of SimuLTE installed in PATH", metavar="PATH", default="../simulte")
@@ -86,13 +86,14 @@ if args:
 makemake_flags = ['-f', '--deep', '--no-deep-includes', '--make-so', '-I', '.', '-o', '{{ cookiecutter.project_name_as_file_name }}', '-O', 'out']
 run_libs = [os.path.join('src', '{{ cookiecutter.project_name_as_file_name }}')]
 run_neds = [os.path.join('src', '{{ cookiecutter.project_name_as_file_name }}')]
+run_excs = []
 run_imgs = [os.path.join('images')]
 
 
 # Add flags for Veins
 if options.veins:
     fname = os.path.join(options.veins, 'print-veins-version')
-    expect_version = [b'5.1']
+    expect_version = [b'5.2']
     try:
         info('Running "%s" to determine Veins version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
@@ -122,22 +123,38 @@ if options.veins:
 
 # Add flags for INET
 if options.inet:
-    fname = os.path.join(options.inet, '_scripts/get_version')
-    expect_version = [b'4.2.0', b'4.2.1']
+    expect_version = [b'4.2.0', b'4.2.1', b'4.2.2', b'4.2.3', b'4.2.4', b'4.2.5', b'4.2.8', b'4.3.0', b'4.3.1', b'4.3.2', b'4.3.5']
     try:
-        info('Running "%s" to determine INET version.' % fname)
-        version = subprocess.check_output(['env', fname]).strip()
-        if not version in expect_version:
-            warning('')
-            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            warning('Unsupported INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
-            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            warning('')
-        else:
-            info('Found INET version %s. Okay.' % version_to_hr(version))
-    except subprocess.CalledProcessError as e:
-        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
-        sys.exit(1)
+        fname1 = os.path.join(options.inet, 'Version')
+        info('Reading "%s" to determine INET version.' % fname1)
+        f = open(fname1, 'rb')
+        s = f.readline()
+        s = s.strip()
+        s = s.split(b'-', 3)
+        assert s[0] == b'inet', 'Version string does not start with "inet"'
+        version = s[1]
+        f.close()
+    except (AssertionError, EnvironmentError) as e1:
+        try:
+            fname2 = os.path.join(options.inet, '_scripts/get_version')
+            info('Running "%s" to determine INET version.' % fname2)
+            version = subprocess.check_output(['env', fname2], stderr=subprocess.STDOUT).strip()
+        except subprocess.CalledProcessError as e2:
+            try:
+                fname3 = os.path.join(options.inet, 'bin/inet_version')
+                info('Running "%s" to determine INET version.' % fname3)
+                version = subprocess.check_output(['env', fname3], stderr=subprocess.STDOUT).strip()
+            except subprocess.CalledProcessError as e3:
+                error('Could not determine INET Version; neither by reading %s (%s), nor by running %s (%s), nor by running %s (%s). Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname1, e1, fname2, e2, fname3, e3, versions_to_hr(expect_version)))
+                sys.exit(1)
+    if not version in expect_version:
+        warning('')
+        warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        warning('Unsupported INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+        warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        warning('')
+    else:
+        info('Found INET version %s. Okay.' % version_to_hr(version))
 
     inet_header_dirs = [os.path.join(os.path.relpath(options.inet, 'src'), 'src')]
     inet_includes = ['-I' + s for s in inet_header_dirs]
@@ -147,13 +164,15 @@ if options.inet:
     makemake_flags += inet_includes + inet_link + inet_defs
     run_libs = [os.path.relpath(os.path.join(options.inet, 'src', 'INET'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.inet, 'src'))] + run_neds
+    if not version in [b'4.2.0', b'4.2.1', b'4.2.2', b'4.2.3', b'4.2.4']:
+        run_excs = [os.path.relpath(os.path.join(options.inet, '.nedexclusions'))] + run_excs
     run_imgs = [os.path.relpath(os.path.join(options.inet, 'images'))] + run_imgs
 
 
 # Add flags for Veins_INET
 if options.veins_inet:
     fname = os.path.join(options.veins_inet, 'print-veins_inet-version')
-    expect_version = [b'4.0']
+    expect_version = [b'5.2']
     try:
         info('Running "%s" to determine Veins_INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
@@ -184,22 +203,38 @@ if options.veins_inet:
 
 # Add flags for INET (version 3)
 if options.inet3:
-    fname = os.path.join(options.inet3, '_scripts/get_version')
-    expect_version = [b'3.6.5', b'3.6.6', b'3.6.7', b'3.6.8']
+    expect_version = [b'3.6.5', b'3.6.6', b'3.6.7', b'3.6.8', b'3.7.0', b'3.7.1', b'3.8.1']
     try:
-        info('Running "%s" to determine INET version.' % fname)
-        version = subprocess.check_output(['env', fname]).strip()
-        if not version in expect_version:
-            warning('')
-            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            warning('Unsupported INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
-            warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            warning('')
-        else:
-            info('Found INET version %s. Okay.' % version_to_hr(version))
-    except subprocess.CalledProcessError as e:
-        error('Could not determine INET Version (by running %s): %s. Check the path to INET (--with-inet3=... option) and the INET version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
-        sys.exit(1)
+        fname1 = os.path.join(options.inet, 'Version')
+        info('Reading "%s" to determine INET version.' % fname1)
+        f = open(fname1, 'rb')
+        s = f.readline()
+        s = s.strip()
+        s = s.split(b'-', 3)
+        assert s[0] == b'inet', 'Version string does not start with "inet"'
+        version = s[1]
+        f.close()
+    except (AssertionError, EnvironmentError) as e1:
+        try:
+            fname2 = os.path.join(options.inet, '_scripts/get_version')
+            info('Running "%s" to determine INET version.' % fname2)
+            version = subprocess.check_output(['env', fname2], stderr=subprocess.STDOUT).strip()
+        except subprocess.CalledProcessError as e2:
+            try:
+                fname3 = os.path.join(options.inet, 'bin/inet_version')
+                info('Running "%s" to determine INET version.' % fname3)
+                version = subprocess.check_output(['env', fname3], stderr=subprocess.STDOUT).strip()
+            except subprocess.CalledProcessError as e3:
+                error('Could not determine INET Version; neither by reading %s (%s), nor by running %s (%s), nor by running %s (%s). Check the path to INET (--with-inet=... option) and the INET version (should be version %s)' % (fname1, e1, fname2, e2, fname3, e3, versions_to_hr(expect_version)))
+                sys.exit(1)
+    if not version in expect_version:
+        warning('')
+        warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        warning('Unsupported INET Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+        warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        warning('')
+    else:
+        info('Found INET version %s. Okay.' % version_to_hr(version))
 
     inet3_header_dirs = [os.path.join(os.path.relpath(options.inet3, 'src'), 'src')]
     inet3_includes = ['-I' + s for s in inet3_header_dirs]
@@ -215,7 +250,7 @@ if options.inet3:
 # Add flags for Veins_INET
 if options.veins_inet3:
     fname = os.path.join(options.veins_inet3, 'print-veins_inet-version')
-    expect_version = [b'3.0']
+    expect_version = [b'5.2']
     try:
         info('Running "%s" to determine Veins_INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
@@ -273,37 +308,37 @@ if options.veins_vlc:
     run_neds = [os.path.relpath(os.path.join(options.veins_vlc, 'src', 'veins-vlc'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.veins_vlc, 'images'))] + run_imgs
 {%- endif %}
-{%- if cookiecutter.use_plexe_veins == "yes" %}
+{%- if cookiecutter.use_plexe == "yes" %}
 
 
-# Add flags for Plexe Veins
-if options.plexe_veins:
-    fname = os.path.join(options.plexe_veins, 'src', 'plexe', 'plexe.h')
-    expect_version = [b'3.0-alpha1']
+# Add flags for Plexe
+if options.plexe:
+    fname = os.path.join(options.plexe, 'print-plexe-version')
+    expect_version = [b'3.0']
     try:
-        info('Running "%s" to determine Plexe Veins version.' % fname)
-        version = subprocess.check_output(['env', 'cat', fname]).strip()
-        if not version:
+        info('Running "%s" to determine Plexe version.' % fname)
+        version = subprocess.check_output(['env', fname]).strip()
+        if not version in expect_version:
             warning('')
             warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            warning('Unsupported Plexe Veins Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
+            warning('Unsupported Plexe Version. Expecting %s, found %s' % (versions_to_hr(expect_version), version_to_hr(version)))
             warning('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             warning('')
         else:
-            info('Found Plexe Veins version %s. Okay.' % version_to_hr(version))
+            info('Found Plexe version %s. Okay.' % version_to_hr(version))
     except subprocess.CalledProcessError as e:
-        error('Could not determine Plexe Veins Version (by running %s): %s. Check the path to Plexe Veins (--with-plexe-veins=... option) and the Plexe Veins version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
+        error('Could not determine Plexe Version (by running %s): %s. Check the path to Plexe (--with-plexe=... option) and the Plexe version (should be version %s)' % (fname, e, versions_to_hr(expect_version)))
         sys.exit(1)
 
-    plexe_veins_header_dirs = [os.path.join(os.path.relpath(options.plexe_veins, 'src'), 'src')]
-    plexe_veins_includes = ['-I' + s for s in plexe_veins_header_dirs]
-    plexe_veins_link = ["-L" + os.path.join(os.path.relpath(options.plexe_veins, 'src'), 'src'), "-lplexe$(D)"]
-    plexe_veins_defs = []
+    plexe_header_dirs = [os.path.join(os.path.relpath(options.plexe, 'src'), 'src')]
+    plexe_includes = ['-I' + s for s in plexe_header_dirs]
+    plexe_link = ["-L" + os.path.join(os.path.relpath(options.plexe, 'src'), 'src'), "-lplexe$(D)"]
+    plexe_defs = []
 
-    makemake_flags += plexe_veins_includes + plexe_veins_link + plexe_veins_defs
-    run_libs = [os.path.relpath(os.path.join(options.plexe_veins, 'src', 'plexe'))] + run_libs
-    run_neds = [os.path.relpath(os.path.join(options.plexe_veins, 'src', 'plexe'))] + run_neds
-    run_imgs = [os.path.relpath(os.path.join(options.plexe_veins, 'images'))] + run_imgs
+    makemake_flags += plexe_includes + plexe_link + plexe_defs
+    run_libs = [os.path.relpath(os.path.join(options.plexe, 'src', 'plexe'))] + run_libs
+    run_neds = [os.path.relpath(os.path.join(options.plexe, 'src', 'plexe'))] + run_neds
+    run_imgs = [os.path.relpath(os.path.join(options.plexe, 'images'))] + run_imgs
 {%- endif %}
 {%- if cookiecutter.use_simulte == "yes" %}
 
@@ -362,6 +397,7 @@ if not os.path.isdir('out'):
 f = open(os.path.join('out', 'config.py'), 'w')
 f.write('run_libs = %s\n' % repr(run_libs))
 f.write('run_neds = %s\n' % repr(run_neds))
+f.write('run_excs = %s\n' % repr(run_excs))
 f.write('run_imgs = %s\n' % repr(run_imgs))
 f.close()
 

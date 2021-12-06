@@ -31,7 +31,7 @@ subprocess.check_call(['git', 'commit', '--allow-empty', '--message', 'Initial c
 
 # INET
 {%- if cookiecutter.use_inet == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.2.1', 'https://github.com/inet-framework/inet', 'v4.2.1'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.2.2', 'https://github.com/inet-framework/inet', 'v4.2.2'])
 #subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
 #subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 4.0.0', 'https://github.com/inet-framework/inet-tutorials', 'v4.0.0'])
@@ -40,7 +40,7 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'M
 
 # INET (version 3)
 {%- if cookiecutter.use_inet3 == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 3.6.8', 'https://github.com/inet-framework/inet', 'v3.6.8'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 3.7.1', 'https://github.com/inet-framework/inet', 'v3.7.1'])
 subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
 subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 3.6.4', 'https://github.com/inet-framework/inet-tutorials', 'v3.6.4'])
@@ -52,9 +52,9 @@ subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (s
 subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins_vlc', '--message', 'Merge Veins VLC 1.0', 'https://github.com/veins/veins_vlc', 'veins-vlc-1.0'])
 {%- endif %}
 
-# Plexe Veins
-{%- if cookiecutter.use_plexe_veins == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe_veins', '--message', 'Merge Plexe Veins 3.0', 'https://github.com/michele-segata/plexe-veins', 'plexe-3.0'])
+# Plexe
+{%- if cookiecutter.use_plexe == "yes" %}
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe', '--message', 'Merge Plexe 3.0', 'https://github.com/michele-segata/plexe', 'plexe-3.0'])
 {%- endif %}
 
 # SimuLTE
@@ -70,12 +70,11 @@ subprocess.check_call(['git', 'remote', 'remove', 'simulte_remote'])
 
 # Simu5G
 {%- if cookiecutter.use_simu5g == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G Master', 'https://github.com/Unipisa/Simu5G.git', 'master'])
-
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G Master', 'https://github.com/Unipisa/Simu5G.git', 'v1.1.0'])
 {%- endif %}
 
 # Veins
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.1', 'https://github.com/sommer/veins', 'veins-5.1'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.2', 'https://github.com/sommer/veins', 'veins-5.2'])
 
 # Cookiecutter project
 subprocess.check_call(['git', 'add', '.'])

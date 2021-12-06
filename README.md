@@ -38,7 +38,7 @@ Select use_veins_vlc:
 1 - no
 2 - yes
 Choose from 1, 2 (1, 2) [1]:
-Select use_plexe_veins:
+Select use_plexe:
 1 - no
 2 - yes
 Choose from 1, 2 (1, 2) [1]:
@@ -53,7 +53,7 @@ Cookiecutter checks successful.
 Cookiecutter successful. Running git commands to set up repository.
 [...]
 From https://github.com/sommer/veins
- * tag               veins-5.1  -> FETCH_HEAD
+ * tag               veins-5.2  -> FETCH_HEAD
 Added dir 'veins'
 Repository set up successful. Running git commands to clean up.
 Cookiecutter successful.

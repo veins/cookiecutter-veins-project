@@ -36,8 +36,8 @@ set -e
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 (cd veins_vlc && ./configure "$@")
 {%- endif %}
-{%- if cookiecutter.use_plexe_veins == "yes" %}
-(cd plexe_veins && ./configure --with-veins=../veins "$@")
+{%- if cookiecutter.use_plexe == "yes" %}
+(cd plexe && ./configure --with-veins=../veins "$@")
 {%- endif %}
 {%- if cookiecutter.use_simulte == "yes" %}
 (cd simulte && make makefiles)

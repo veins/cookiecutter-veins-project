@@ -6,7 +6,7 @@
     "use_inet": ["no", "yes"],
     "use_inet3": ["no", "yes"],
     "use_veins_vlc": ["no", "yes"],
-    "use_plexe_veins": ["no", "yes"],
+    "use_plexe": ["no", "yes"],
     "use_simulte": ["no", "yes"],
     "use_simu5g": ["no", "yes"],
     "_dummy": ""

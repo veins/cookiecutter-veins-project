@@ -46,8 +46,8 @@ endif
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 	$(MAKE) -C veins_vlc all
 {%- endif %}
-{%- if cookiecutter.use_plexe_veins == "yes" %}
-	$(MAKE) -C plexe_veins all
+{%- if cookiecutter.use_plexe == "yes" %}
+	$(MAKE) -C plexe all
 {%- endif %}
 {%- if cookiecutter.use_simu5g == "yes" %}
 ifdef MODE
@@ -80,8 +80,8 @@ clean:
 {%- if cookiecutter.use_veins_vlc == "yes" %}
 	$(MAKE) -C veins_vlc clean
 {%- endif %}
-{%- if cookiecutter.use_plexe_veins == "yes" %}
-	$(MAKE) -C plexe_veins clean
+{%- if cookiecutter.use_plexe == "yes" %}
+	$(MAKE) -C plexe clean
 {%- endif %}
 {%- if cookiecutter.use_simu5g == "yes" %}
 	$(MAKE) -C simu5g clean
