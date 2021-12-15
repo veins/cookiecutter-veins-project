@@ -384,7 +384,7 @@ if options.simu5g:
     simu5g_defs = []
 
     makemake_flags += simu5g_includes + simu5g_link + simu5g_defs
-    run_libs = [os.path.relpath(os.path.join(options.simu5g, 'src', 'simu5G'))] + run_libs
+    run_libs = [os.path.relpath(os.path.join(options.simu5g, 'src', 'simu5g'))] + run_libs
     run_neds = [os.path.relpath(os.path.join(options.simu5g, 'src'))] + run_neds
     run_imgs = [os.path.relpath(os.path.join(options.simu5g, 'images'))] + run_imgs
 {%- endif %}
