@@ -31,7 +31,7 @@ subprocess.check_call(['git', 'commit', '--allow-empty', '--message', 'Initial c
 
 # INET
 {%- if cookiecutter.use_inet == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.2.2', 'https://github.com/inet-framework/inet', 'v4.2.2'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.4.0', 'https://github.com/inet-framework/inet', 'v4.4.0'])
 #subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
 #subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 4.0.0', 'https://github.com/inet-framework/inet-tutorials', 'v4.0.0'])
@@ -70,7 +70,7 @@ subprocess.check_call(['git', 'remote', 'remove', 'simulte_remote'])
 
 # Simu5G
 {%- if cookiecutter.use_simu5g == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G Master', 'https://github.com/Unipisa/Simu5G.git', 'v1.1.0'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G Master', 'https://github.com/Unipisa/Simu5G.git', 'v1.2.1'])
 {%- endif %}
 
 # Veins
