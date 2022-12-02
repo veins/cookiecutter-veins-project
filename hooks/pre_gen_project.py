@@ -37,12 +37,12 @@ print('Cookiecutter checks starting.')
 print('Making sure we can run git')
 subprocess.check_call(['git', '--version'])
 
-if not re.match(r'^[a-z0-9_]+$', project_name_as_file_name):
-    print('ERROR: project_name_as_file_name "%s" does not solely consist of characters a-z, 0-9, and underscore.' % project_name_as_file_name)
+if not re.match(r'^[a-z][a-z0-9_]+$', project_name_as_file_name):
+    print('ERROR: project_name_as_file_name "%s" does not solely consist of characters a-z, 0-9, and underscore, or does not start with a letter.' % project_name_as_file_name)
     sys.exit(1)
 
-if not re.match(r'^[A-Z0-9_]+$', project_name_as_macro_name):
-    print('ERROR: project_name_as_macro_name "%s" does not solely consist of characters A-Z, 0-9, and underscore.' % project_name_as_macro_name)
+if not re.match(r'^[A-Z][A-Z0-9_]+$', project_name_as_macro_name):
+    print('ERROR: project_name_as_macro_name "%s" does not solely consist of characters A-Z, 0-9, and underscore, or does not start with a letter.' % project_name_as_macro_name)
     sys.exit(1)
 
 if use_inet == "yes" and use_inet3 == "yes":
