@@ -20,21 +20,13 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 
-{% raw -%}
-cplusplus {{
-#include "veins/base/utils/Coord.h"
-#include "veins/modules/messages/BaseFrame1609_4_m.h"
-#include "veins/base/utils/SimpleAddress.h"
-}}
-{%- endraw %}
+import veins.base.utils.Coord;
+import veins.modules.messages.BaseFrame1609_4;
+import veins.base.utils.SimpleAddress;
 
 namespace {{ cookiecutter.project_name_as_file_name }};
 
-class veins::BaseFrame1609_4;
-class noncobject veins::Coord;
-class veins::LAddress::L2Type extends void;
-
-packet ApplicationLayerTestMessage extends BaseFrame1609_4 {
+packet ApplicationLayerTestMessage extends veins::BaseFrame1609_4 {
     string demoData;
     veins::LAddress::L2Type senderAddress = -1;
     int serial = 0;
