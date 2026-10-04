@@ -23,6 +23,14 @@
 import os
 import subprocess
 
+def replace_in_file(path, old, new):
+    with open(os.getcwd() + path, "r") as file:
+        data = file.read()
+    if old not in data:
+        raise RuntimeError('Could not find "%s" in %s' % (old, path))
+    with open(os.getcwd() + path, "w") as file:
+        file.write(data.replace(old, new))
+
 print('Cookiecutter successful. Running git commands to set up repository.')
 subprocess.check_call(['git', 'init'])
 subprocess.check_call(['git', 'config', 'user.name', 'Christoph Sommer'])
@@ -31,7 +39,7 @@ subprocess.check_call(['git', 'commit', '--allow-empty', '--message', 'Initial c
 
 # INET
 {%- if cookiecutter.use_inet == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.4.0', 'https://github.com/inet-framework/inet', 'v4.4.0'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=inet', '--message', 'Merge INET 4.5.4', 'https://github.com/inet-framework/inet', 'v4.5.4'])
 #subprocess.check_call(['git', 'rm', 'inet/.gitmodules', 'inet/showcases', 'inet/tutorials'])
 #subprocess.check_call(['git', 'commit', '--message', 'inet: remove submodules (showcases and tutorials)'])
 #subprocess.check_call(['git', 'subtree', 'add', '--squash', '--prefix=inet/tutorials', '--message', 'Merge INET Tutorials 4.0.0', 'https://github.com/inet-framework/inet-tutorials', 'v4.0.0'])
@@ -54,7 +62,7 @@ subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins_vlc', '--message
 
 # Plexe
 {%- if cookiecutter.use_plexe == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe', '--message', 'Merge Plexe 3.0', 'https://github.com/michele-segata/plexe', 'plexe-3.0'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=plexe', '--message', 'Merge Plexe 3.2', 'https://github.com/michele-segata/plexe', 'plexe-3.2'])
 {%- endif %}
 
 # SimuLTE
@@ -70,11 +78,11 @@ subprocess.check_call(['git', 'remote', 'remove', 'simulte_remote'])
 
 # Simu5G
 {%- if cookiecutter.use_simu5g == "yes" %}
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G Master', 'https://github.com/Unipisa/Simu5G.git', 'v1.2.1'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=simu5g', '--message', 'Merge Simu5G 1.7.0', 'https://github.com/Unipisa/Simu5G.git', 'v1.7.0'])
 {%- endif %}
 
 # Veins
-subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.2', 'https://github.com/sommer/veins', 'veins-5.2'])
+subprocess.check_call(['git', 'subtree', 'add', '--prefix=veins', '--message', 'Merge Veins 5.3.1', 'https://github.com/sommer/veins', 'veins-5.3.1'])
 
 # Cookiecutter project
 subprocess.check_call(['git', 'add', '.'])
@@ -127,25 +135,14 @@ with open(os.getcwd() + "/simulte/src/run_lte", "w") as file:
 {%- if cookiecutter.use_simu5g == "yes" %}
 
 # '.project' file
-with open(os.getcwd() + "/simu5g/.project", "r") as file:
-    data = file.readlines()
-data[5] =" 		<project>inet</project>\n<project>veins</project>\n<project>veins_inet</project>\n"
-with open(os.getcwd() + "/simu5g/.project", "w") as file:
-    file.writelines(data)
+replace_in_file("/simu5g/.project", "<project>inet-4.5.4</project>", "<project>inet</project>\n\t\t<project>veins</project>\n\t\t<project>veins_inet</project>")
 
 # Makefile
-with open(os.getcwd() + "/simu5g/Makefile", "r") as file:
-    data = file.readlines()
-data[15] ="	@cd src && opp_makemake --make-so -f --deep -o simu5g -O out -KINET_PROJ=../../inet -DINET_IMPORT -I. -I$$\(INET_PROJ\)/src -L$$\(INET_PROJ\)/src -lINET$$\(D\)\n"
-with open(os.getcwd() + "/simu5g/Makefile", "w") as file:
-    file.writelines(data)
+replace_in_file("/simu5g/Makefile", "-KINET_PROJ=$(INET_ROOT)", "-KINET_PROJ=../../inet")
 
 # bin
-with open(os.getcwd() + "/simu5g/bin/simu5g", "r") as file:
-    data = file.readlines()
-data[3] ="INET_SRC=`(cd $SIMU5G_ROOT/../inet/src ; pwd)`\n"
-with open(os.getcwd() + "/simu5g/bin/simu5g", "w") as file:
-    file.writelines(data)
+replace_in_file("/simu5g/bin/simu5g", "INET_SRC=$INET_ROOT/src", "INET_SRC=`(cd $SIMU5G_ROOT/../inet/src ; pwd)`")
+replace_in_file("/simu5g/bin/simu5g_dbg", "INET_SRC=`(cd $(inet_root)/src ; pwd)`", "INET_SRC=`(cd $SIMU5G_ROOT/../inet/src ; pwd)`")
 
 {%- endif %}
 

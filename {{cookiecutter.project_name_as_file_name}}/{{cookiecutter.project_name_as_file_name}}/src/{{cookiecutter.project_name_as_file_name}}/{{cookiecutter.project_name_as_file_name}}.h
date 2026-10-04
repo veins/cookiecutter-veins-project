@@ -31,8 +31,8 @@
 #define {{ cookiecutter.project_name_as_macro_name }}_VERSION_ALPHA 0
 
 // Explicitly check Veins version number
-#if !(VEINS_VERSION_MAJOR == 5 && VEINS_VERSION_MINOR >= 2)
-#error Veins version 5.2 or compatible required
+#if !(VEINS_VERSION_MAJOR == 5 && VEINS_VERSION_MINOR >= 3)
+#error Veins version 5.3 or compatible required
 #endif
 
 // {{ cookiecutter.project_name_as_macro_name }}_API macro. Allows us to use the same .h files for both building a .dll and linking against it
