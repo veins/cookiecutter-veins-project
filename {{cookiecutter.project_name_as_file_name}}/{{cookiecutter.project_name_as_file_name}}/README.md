@@ -4,7 +4,7 @@
 
 ## Supported program versions ##
 
-- Veins 5.3.1 (see <http://veins.car2x.org/>)
+- Veins 5.4 (see <http://veins.car2x.org/>)
 - OMNeT++ 6.4.0 (see <https://omnetpp.org/>)
 
 ## License ##

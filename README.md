@@ -53,7 +53,7 @@ Cookiecutter checks successful.
 Cookiecutter successful. Running git commands to set up repository.
 [...]
 From https://github.com/sommer/veins
- * tag               veins-5.3.1 -> FETCH_HEAD
+ * tag               veins-5.4 -> FETCH_HEAD
 Added dir 'veins'
 Repository set up successful. Running git commands to clean up.
 Cookiecutter successful.

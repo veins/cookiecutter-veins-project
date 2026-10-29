@@ -94,7 +94,7 @@ run_imgs = [os.path.join('images')]
 # Add flags for Veins
 if options.veins:
     fname = os.path.join(options.veins, 'print-veins-version')
-    expect_version = [b'5.3.1']
+    expect_version = [b'5.4']
     try:
         info('Running "%s" to determine Veins version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
@@ -124,7 +124,7 @@ if options.veins:
 
 # Add flags for INET
 if options.inet:
-    expect_version = [b'4.2.0', b'4.2.1', b'4.2.2', b'4.2.3', b'4.2.4', b'4.2.5', b'4.2.8', b'4.3.0', b'4.3.1', b'4.3.2', b'4.3.5', b'4.4.0', b'4.5.4']
+    expect_version = [b'4.2.0', b'4.2.1', b'4.2.2', b'4.2.3', b'4.2.4', b'4.2.5', b'4.2.8', b'4.3.0', b'4.3.1', b'4.3.2', b'4.3.5', b'4.4.0', b'4.5.4', b'4.6.0', b'4.7.0']
     try:
         fname1 = os.path.join(options.inet, 'Version')
         info('Reading "%s" to determine INET version.' % fname1)
@@ -182,7 +182,7 @@ if options.inet:
 # Add flags for Veins_INET
 if options.veins_inet:
     fname = os.path.join(options.veins_inet, 'print-veins_inet-version')
-    expect_version = [b'5.3.1']
+    expect_version = [b'5.4']
     try:
         info('Running "%s" to determine Veins_INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
@@ -260,7 +260,7 @@ if options.inet3:
 # Add flags for Veins_INET
 if options.veins_inet3:
     fname = os.path.join(options.veins_inet3, 'print-veins_inet-version')
-    expect_version = [b'5.3.1']
+    expect_version = [b'5.4']
     try:
         info('Running "%s" to determine Veins_INET version.' % fname)
         version = subprocess.check_output(['env', fname]).strip()
